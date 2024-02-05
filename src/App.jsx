@@ -5,15 +5,6 @@ import './App.css'
 
 function App() {
 
-	let resumeObj = {
-		name:"",
-		phone:"",
-		email:"",
-		github:"",
-		linkedin:"",
-		portfolio:"",
-	}
-
 	const [state,setState] = useState(<Hero change = {handleState}/>);
 
 	function handleState(){
