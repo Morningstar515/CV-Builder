@@ -6,9 +6,8 @@ import './App.css'
 function App() {
 
 	const [state,setState] = useState(<Hero change = {handleState}/>);
-
-	function handleState(){
-		setState(<TheBasics/>)
+	function handleState(next){
+		setState(next)
 	}
 	return (
 		<div className='flex flex-col w-screen h-screen justify-center items-center gap-24 bg-slate-100'>
