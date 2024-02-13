@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import EducationAndMore from './EducationAndMore';
 
-export default function TheBasics({change}){
-
+export default function TheBasics(props){
+    
+    let resumeObj;
     //OnClick putting data into object to be passed along
-    function resumeObject(e){
-        e.preventDefault();
-        let resumeObj = {
+    function resumeObject(){
+       // e.preventDefault();
+        resumeObj = {
             name: name,
             phone: phone,
             email: email,
@@ -74,7 +75,7 @@ export default function TheBasics({change}){
                         <input type="text" onChange={handlePortfolio} className="shadow-sm border border-grey-200" id='portfolio'/>
                     </div>
                 </form>
-                <button form="basicsForm" onClick={()=> {resumeObject; change(<EducationAndMore change={change}/>)}} className="h-10 w-24 bg-blue-400 text-white rounded-md hover:bg-blue-500 font-medium text-xl">Next</button>
+                <button form="basicsForm" onClick={()=> {resumeObject();props.change(<EducationAndMore change={props.change} resumeObj={resumeObj} />)}} className="h-10 w-24 bg-blue-400 text-white rounded-md hover:bg-blue-500 font-medium text-xl">Next</button>
             </div>
         </>
     )
