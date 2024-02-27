@@ -80,20 +80,24 @@ export default function AddEducation(props){
         }
     }
     return(
-    <div className="flex w-full">
-        <form action="" className='flex gap-24' id='EducationForm'>
-            <div className='flex gap-3 mt-2'>
-                <label>School Name:</label>
-                <input type="text" onChange={handleSchoolName} className="shadow-sm border border-grey-200" placeholder='University' id='name'/>
-                <label>Major:</label>
-                <input type="text" onChange={handleMajor} className="shadow-sm border border-grey-200" placeholder='Major' id='name'/>
-                <label>Minor:</label>
-                <input type="text" onChange={handleMinor} className="shadow-sm border border-grey-200" placeholder='Minor' id='name'/>
-                <label>Start Date:</label>
-                <input type="text" onChange={handleStartDate} className="shadow-sm border border-grey-200" placeholder='Start' id='phone'/>
-                <label>End Date:</label>
-                <input type="text" onChange={handleEndDate} className="shadow-sm border border-grey-200" placeholder='End' id='phone'/>
-
+    <div className="flex w-full h-auto">
+        <p className="float-left">Education-{props.id + 1}:</p>
+        <form action="" className='flex gap-24 w-full justify-center' id='EducationForm'>
+            <div className='flex gap-3 border-b-2 p-3 border-black'>
+                <div className="flex flex-col gap-2">
+                    <label>School Name:</label>
+                    <input type="text" onChange={handleSchoolName} className="shadow-sm border border-grey-200" placeholder='University' id='name'/>
+                    <label>Major:</label>
+                    <input type="text" onChange={handleMajor} className="shadow-sm border border-grey-200" placeholder='Major' id='name'/>
+                    <label>Start Date:</label>
+                    <input type="text" onChange={handleStartDate} className="shadow-sm border border-grey-200" placeholder='Start' id='phone'/>
+                </div>
+                <div className="flex flex-col gap-2">    
+                    <label>Minor:</label>
+                    <input type="text" onChange={handleMinor} className="shadow-sm border border-grey-200" placeholder='Minor' id='name'/>
+                    <label>End Date:</label>
+                    <input type="text" onChange={handleEndDate} className="shadow-sm border border-grey-200" placeholder='End' id='phone'/>
+                </div>
             </div>
         </form>    
     </div>
