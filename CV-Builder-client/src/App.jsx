@@ -7,20 +7,14 @@ import './App.css'
 function App() {
 
 
-const fetchAPI = async () => {
-	const res = await axios.get("http://localhost:5000/hello")
-	console.log(res)
-}
 
-useEffect(()=>{
-	fetchAPI()
-},[])
 	const [state,setState] = useState(<Hero change = {handleState}/>);
 
 	function handleState(next){
 		setState(next)
 	}
 
+	console.log('\\')
 
 
 	return (
