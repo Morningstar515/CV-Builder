@@ -6,7 +6,6 @@ export default function TheBasics(props){
     let resumeObj;
     //OnClick putting data into object to be passed along
     function resumeObject(){
-       // e.preventDefault();
         resumeObj = {
             name: name,
             phone: phone,

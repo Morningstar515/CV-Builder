@@ -4,7 +4,7 @@ from flask_cors import CORS, cross_origin
 import json
 from pdflatex import PDFLaTeX
 import subprocess
-
+import os
 
 app = Flask(__name__)
 cors = CORS(app, origins='*')
@@ -14,19 +14,61 @@ cors = CORS(app, origins='*')
 def returnTemplate(templateName):
     mydb = mysql.connector.connect(host="localhost", user="root", passwd='qtip515', database='CVBuilder')
     mycursor = mydb.cursor()
-    mycursor.execute("select Templates from TemplateTable where keyid='jakes'")
-    for i in mycursor:
-        f = open("latex.html", "a")
-        p = json.dumps(i)
-        f.write(p)
-        
+    mycursor.execute("select Templates from TemplateTable where keyid='jakes' " )
+
+    for i in mycursor:        
         return i
     
+  
+test = returnTemplate("jakes")
+
+
+def compile_latex_to_pdf(latex_file_path):
+    """
+    Compile a LaTeX file to PDF using pdflatex.
+    
+    Args:
+        latex_file_path (str): The path to the LaTeX file.
+        
+    Returns:
+        str: The path to the generated PDF file.
+    """
+    # Get the directory containing the LaTeX file
+    latex_dir = os.path.dirname(latex_file_path)
+    
+    # Change directory to the LaTeX file directory
+    os.chdir(latex_dir)
+    
+    # Compile the LaTeX file using pdflatex
+    subprocess.run(['pdflatex', '-interaction=nonstopmode', latex_file_path])
+    
+    # Get the base name of the LaTeX file (without extension)
+    latex_basename = os.path.splitext(os.path.basename(latex_file_path))[0]
+    
+    # Return the path to the generated PDF file
+    return os.path.join(latex_dir, f"{latex_basename}.pdf")
     
 
+def open_pdf(pdf_file_path):
+    """
+    Open a PDF file using the default PDF viewer.
+    
+    Args:
+        pdf_file_path (str): The path to the PDF file.
+    """
+    # Check if the PDF file exists
+    if os.path.exists(pdf_file_path):
+        # Open the PDF file using the default PDF viewer
+        subprocess.run(['xdg-open', pdf_file_path])
+    else:
+        print(f"Error: PDF file '{pdf_file_path}' not found.")
 
-test = returnTemplate("jakes")
-test = test[0]
+# Example usage:
+with open("ihope.tex", "w") as file:
+
+    # Write your string into the file
+    file.write(test[0])
+
 
 
 @app.route("/jakes", methods=['GET'])
@@ -35,14 +77,6 @@ def hello():
     latex_content = test
     print(test)
 
-    formatted_content = format_latex(latex_content)
-
-    filename = 'output.tex'
-    generate_latex_file(formatted_content, filename)
-
-    # pdfl = PDFLaTeX.from_texfile('output.tex')
-    # pdf, log, completed_process = pdfl.create_pdf(keep_pdf_file=True, keep_log_file=True)
-
     return json.dumps(test)
 
 
@@ -50,56 +84,9 @@ def hello():
 def makeLatex():
     print('fart')
 
-
-def format_latex(latex_code):
-    formatted_code = latex_code.strip()
-    formatted_code = formatted_code.replace('\n', ' \n')  # Add space before newline
-    formatted_code = formatted_code.replace('end{tabular*', '\\end{tabular*}')  # Fix tabular* end tag
-    formatted_code = formatted_code.replace('section{', '\\section{')  # Fix section tag
-    formatted_code = formatted_code.replace('item', '\\item')  # Fix item tag
-    formatted_code = formatted_code.replace('emph{', '\\emph{')  # Fix emph tag
-    formatted_code = formatted_code.replace('small', '\\small')  # Fix small tag
-    formatted_code = formatted_code.replace('documentclass[', '\\documentclass[')  # Fix documentclass tag
-    formatted_code = formatted_code.replace('renewcommand', '\\renewcommand')  # Fix renewcommand tag
-    formatted_code = formatted_code.replace('usepackage', '\\usepackage')  # Fix usepackage tag
-    return formatted_code
-
-
-
-
-
-
-
-def generate_latex_file(latex_string, filename):
-    with open(filename, 'w') as f:
-        f.write(latex_string)
-    print(f"LaTeX file '{filename}' generated successfully.")
-
-
-def format_latex_content(content):
-    # Split the content by section delimiter
-    sections = content.split('\n%-----------')
-    
-    # Join each section with a newline and return
-    return '\n\n'.join(sections)
-
-
-
-
-def compile_tex(tex_file):
-    subprocess.run(['pdflatex', tex_file])
-    subprocess.run(['pdflatex', tex_file])  # Run twice to resolve references
-    subprocess.run(['pdflatex', tex_file])  # Run thrice to ensure table of contents updates
-    subprocess.run(['xdg-open', tex_file.replace('.tex', '.pdf')])  # Open PDF file
-
-
-
-if __name__ == "__main__":
-    tex_file = "output.tex"  # Replace with your .tex file name
-    compile_tex(tex_file)
-
-
-
+latex_file_path = './ihope.tex'
+pdf_file_path = compile_latex_to_pdf(latex_file_path)
+open_pdf(pdf_file_path)
     
 
 if __name__ =="__main__":

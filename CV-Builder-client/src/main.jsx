@@ -13,11 +13,18 @@ import EducationAndMore from './components/EducationAndMore.jsx'
 import Experience from './components/Experience.jsx'
 import Projects from './components/Projects.jsx'
 import TechnicalSkills from './components/TechnicalSkills.jsx'
+import PDFViewer from './components/PDFViewer.jsx'
 
 const router = createBrowserRouter([
 {
   path: "/",
   element: <App/>,
+  errorElement: <p>404</p>
+},
+
+{
+  path: "/ihope.pdf",
+  element: <PDFViewer/>,
   errorElement: <p>404</p>
 },
 
