@@ -25,12 +25,12 @@ function App() {
 			</div>
 
 			<div className='w-1/3 h-2/3'>
-				<PDFViewer/>
+				<iframe src="./ihope.pdf" width='100%' height='500px' />
 			</div>
 		</div>
 
 
-		
+		// src/component/ihope.pdf
 	)
 }
 

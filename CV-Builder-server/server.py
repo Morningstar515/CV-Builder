@@ -64,7 +64,7 @@ def open_pdf(pdf_file_path):
         print(f"Error: PDF file '{pdf_file_path}' not found.")
 
 # Example usage:
-with open("ihope.tex", "w") as file:
+with open("../CV-Builder-client/ihope.tex", "w") as file:
 
     # Write your string into the file
     file.write(test[0])
@@ -84,7 +84,7 @@ def hello():
 def makeLatex():
     print('fart')
 
-latex_file_path = './ihope.tex'
+latex_file_path = '../CV-Builder-client/ihope.tex'
 pdf_file_path = compile_latex_to_pdf(latex_file_path)
 open_pdf(pdf_file_path)
     

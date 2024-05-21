@@ -22,11 +22,7 @@ const router = createBrowserRouter([
   errorElement: <p>404</p>
 },
 
-{
-  path: "/ihope.pdf",
-  element: <PDFViewer/>,
-  errorElement: <p>404</p>
-},
+
 
 {
   path: "/thebasics",
