@@ -23,14 +23,12 @@ function App() {
 			<div className='flex flex-col w-2/3 h-full justify-center items-center'>
 				{state}
 			</div>
-
-			<div className='w-1/3 h-2/3'>
-				<iframe src="./ihope.pdf" width='100%' height='500px' />
+			<div className='w-1/3 h-full m-4'>
+				<iframe src="./ihope.pdf" width='100%' height='80%' />
 			</div>
 		</div>
 
 
-		// src/component/ihope.pdf
 	)
 }
 

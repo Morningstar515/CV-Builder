@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import EducationAndMore from './EducationAndMore';
+import axios from 'axios';
 
 export default function TheBasics(props){
     
@@ -24,9 +25,19 @@ export default function TheBasics(props){
     const [linkedin,setLinkedin] = useState("");
     const [portfolio,setPortfolio] = useState("");
 
+
     //State Handlers
     const handleName = (e) => {
         setName(e.target.value);
+        fetch("http://localhost:5000/parseName", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",            
+            },
+            body: JSON.stringify({ data: e.target.value})
+        })
+        .then((res) => res.json())
+        .then()
     }
 
     const handlePhone = (e) => {
