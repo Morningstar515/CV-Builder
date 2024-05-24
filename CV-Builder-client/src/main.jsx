@@ -13,7 +13,6 @@ import EducationAndMore from './components/EducationAndMore.jsx'
 import Experience from './components/Experience.jsx'
 import Projects from './components/Projects.jsx'
 import TechnicalSkills from './components/TechnicalSkills.jsx'
-import PDFViewer from './components/PDFViewer.jsx'
 
 const router = createBrowserRouter([
 {

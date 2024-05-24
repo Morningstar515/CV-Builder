@@ -13,7 +13,6 @@ export default function Experience(props){
     const handleExperience = () => {
         setExperience((count) => count + 1)
     }
-
     const append = () => {
         handleExperience(experienceArray);
     }

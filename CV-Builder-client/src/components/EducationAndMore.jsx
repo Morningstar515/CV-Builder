@@ -15,9 +15,9 @@ export default function EducationAndMore(props){
             ["SCHOOLLOCATION" + (item.props.id + 1)]: props.resumeObj["city" + (item.props.id + 1)],
             ["SCHOOLSTATE" + (item.props.id + 1)]: props.resumeObj["state" + (item.props.id + 1)],
             ["DEGREESTART" + (item.props.id + 1)]: props.resumeObj["startDate" + (item.props.id + 1)],
-            ["DEGREEEND" + (item.props.id + 1)]: props.resumeObj["endDate" + (item.props.id + 1)]
+            ["DEGREEEND" + (item.props.id + 1)]: props.resumeObj["endDate" + (item.props.id + 1)],
+            ["count"]: [item.props.id + 1]
         };
-        console.log(info)
 
 
         fetch("http://localhost:5000/parseEducation", {
@@ -29,11 +29,26 @@ export default function EducationAndMore(props){
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log(data)
                 props.refresh()
             })
         });
     
+    }
+
+    function callHeader(){
+        if (schoolArray.length < 1){
+            fetch("http://localhost:5000/addEducation", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    props.refresh()
+                })
+        }
+
     }
 
 
@@ -51,7 +66,6 @@ export default function EducationAndMore(props){
 
     function append(){
         handleEducation(schoolArray);
-        console.log(props.resumeObj)
     }
 
     return(
@@ -60,8 +74,8 @@ export default function EducationAndMore(props){
             <div className="flex flex-col min-w-[800px] h-1/2 shadow-lg rounded-2xl bg-white items-center p-3 overflow-scroll" id='main'>
                 {schoolArray}
             </div>
-            <button onClick={append} className="flex w-1/5 h-10 bg-blue-400 rounded-md text-white justify-center items-center">Add School</button>
-            <button form="EducationForm" onClick={()=> {props.change(<Experience change={props.change} resumeObj = {props.resumeObj}/>); updatePdf()}} className="h-10 w-24 bg-blue-400 text-white rounded-md hover:bg-blue-500 font-medium text-xl">Next</button>
+            <button onClick={()=> {append();callHeader()}} className="flex w-1/5 h-10 bg-blue-400 rounded-md text-white justify-center items-center">Add School</button>
+            <button form="EducationForm" onClick={()=> {props.change(<Experience change={props.change} resumeObj = {props.resumeObj} refresh={props.refresh}/>); updatePdf()}} className="h-10 w-24 bg-blue-400 text-white rounded-md hover:bg-blue-500 font-medium text-xl">Next</button>
 
         </>
     )
