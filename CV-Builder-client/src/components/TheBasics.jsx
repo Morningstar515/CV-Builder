@@ -1,7 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import EducationAndMore from './EducationAndMore';
 import axios from 'axios';
-
 export default function TheBasics(props){
     
     let resumeObj;
@@ -25,19 +24,9 @@ export default function TheBasics(props){
     const [linkedin,setLinkedin] = useState("");
     const [portfolio,setPortfolio] = useState("");
 
-
     //State Handlers
     const handleName = (e) => {
         setName(e.target.value);
-        fetch("http://localhost:5000/parseName", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",            
-            },
-            body: JSON.stringify({ data: e.target.value})
-        })
-        .then((res) => res.json())
-        .then()
     }
 
     const handlePhone = (e) => {
@@ -59,7 +48,19 @@ export default function TheBasics(props){
         setPortfolio(e.target.value)
     }
 
-
+    const updatePdf = () => {
+        fetch("http://localhost:5000/parseBasics", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",            
+            },
+            body: JSON.stringify({ NAME: name, PHONE: phone, EMAIL: email, GITHUB: github, LINKEDIN: linkedin})
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            props.refresh()
+        })
+    }
 
 
     return (
@@ -85,7 +86,7 @@ export default function TheBasics(props){
                         <input type="text" onChange={handlePortfolio} className="shadow-sm border border-grey-200" id='portfolio'/>
                     </div>
                 </form>
-                <button form="basicsForm" onClick={()=> {resumeObject();props.change(<EducationAndMore change={props.change} resumeObj={resumeObj} />)}} className="h-10 w-24 bg-blue-400 text-white rounded-md hover:bg-blue-500 font-medium text-xl">Next</button>
+                <button form="basicsForm" onClick={()=> {resumeObject();props.change(<EducationAndMore change={props.change} resumeObj={resumeObj} refresh={props.refresh} />);updatePdf()}} className="h-10 w-24 bg-blue-400 text-white rounded-md hover:bg-blue-500 font-medium text-xl">Next</button>
             </div>
         </>
     )

@@ -10,12 +10,27 @@ import ReactPDF from '@react-pdf/renderer'
 function App() {
 
 
-	const [state,setState] = useState(<Hero change = {handleState}/>);
+	const [state,setState] = useState(<Hero change = {handleState} refresh={refresh}/>);
 
 	function handleState(next){
 		setState(next)
 	}
 
+	function refresh(){
+		let x = document.getElementById("frame");
+		x.contentWindow.location.reload();
+	}
+	function reset(){
+		handleState(<Hero change = {handleState} refresh={refresh}/>)
+		fetch('http://localhost:5000/jakes',{
+			method: "GET",
+			headers: {
+				'Content-Type': "application/json"
+			},
+		})
+		.then((res) => res.json())
+		.then((data) => refresh())
+	}
 
 
 	return (
@@ -23,12 +38,11 @@ function App() {
 			<div className='flex flex-col w-2/3 h-full justify-center items-center'>
 				{state}
 			</div>
-			<div className='w-1/3 h-full m-4'>
-				<iframe src="./ihope.pdf" width='100%' height='80%' />
+			<div className='flex flex-col w-1/3 h-full m-4 justify-center items-center gap-4'>
+				<iframe id="frame" src="./ihope.pdf" width='100%' height='80%' />
+				<button className="h-10 w-1/3 bg-blue-400 text-white rounded-md hover:bg-blue-500 font-medium text-xl" onClick={reset}>Restart Form</button>
 			</div>
 		</div>
-
-
 	)
 }
 

@@ -14,16 +14,6 @@ import re
 app = Flask(__name__)
 CORS(app)
 
-def returnTemplate(templateName):
-    mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
-    mycursor = mydb.cursor()
-    mycursor.execute("select Templates from TemplateTable where keyid='jakes' " )
-
-    for i in mycursor:        
-        return i
-    
-test = returnTemplate("jakes")
-
 
 def compile_latex_to_pdf(latex_file_path):
     # Get the directory containing the LaTeX file
@@ -41,6 +31,26 @@ def compile_latex_to_pdf(latex_file_path):
     os.chdir("../CV-Builder-server/")
     # Return the path to the generated PDF file
     return os.path.join(latex_dir, f"{latex_basename}.pdf")
+
+
+
+def returnTemplate(templateName):
+    mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
+    mycursor = mydb.cursor()
+    mycursor.execute("select Templates from TemplateTable where keyid='jakes' " )
+
+    for i in mycursor:        
+        with open("../CV-Builder-client/ihope.tex", "w") as file:
+            # Write your string into the file
+            file.write(i[0])
+        file.close()
+
+    compile_latex_to_pdf("../CV-Builder-client/ihope.tex")
+
+test = returnTemplate("jakes")
+
+
+
     
 
 def open_pdf(pdf_file_path):
@@ -51,51 +61,130 @@ def open_pdf(pdf_file_path):
     else:
         print(f"Error: PDF file '{pdf_file_path}' not found.")
 
-# Example usage:
-with open("../CV-Builder-client/ihope.tex", "w") as file:
-    # Write your string into the file
-    file.write(test[0])
 
+
+# Original Compile
 latex_file_path = '../CV-Builder-client/ihope.tex'
 pdf_file_path = compile_latex_to_pdf(latex_file_path)
 
-#open_pdf('../CV-Builder-client/ihope.pdf')
-
 
 # Routes
-
 @app.route("/jakes", methods=['GET'])
-def hello():
-    return jsonify(test)
+def restart():
+    returnTemplate('jakes')
+    return jsonify({"result": "farts"})
 
 @app.route("/testy", methods=['GET'])
 def testy():
-    print( "<<<<<<<<<<<<<<<<<<<")
     return jsonify({"result": "farts"})
 
 
-@app.route("/parseName", methods=['POST'])
-def parseName():
-    key = r"NAME"
+@app.route("/parseBasics", methods=['POST'])
+def parseBasics():
     data = request.data.decode("utf-8")
     data = json.loads(data)
-    with open("../CV-Builder-client/ihope.tex", "r+") as file:
 
-        for line in file:
-            if re.search(key,line):
-                print(data["data"])
-                print('<<<<<')
-                new = re.sub(key, data["data"], line)
-                print(new)
+    for key in data:
+
+        newline = ""
+        oldLine = ""
+        with open("../CV-Builder-client/ihope.tex", "r+") as file:
+            for line in file:
+                if re.search(key,line):
+                    oldLine = line
+                    newline = re.sub(key, data[key], line)
+                    line.replace(line,newline)
+        file.close()
+
+        with open("../CV-Builder-client/ihope.tex", "r+") as file:
+            lines = file.readlines()  # Read all lines into a list
+
+            for i, line in enumerate(lines):
+                if line.strip() == oldLine.strip():
+                    lines[i] = newline # Replace the old line with newline
+
+            file.seek(0)  # Move the file pointer to the beginning
+            file.writelines(lines)  # Write the modified lines back to the file
+        file.close()
+
 
     # Compile LaTeX to PDF
     compile_latex_to_pdf(latex_file_path)
 
-    return jsonify({"result": data["data"]})
+    return jsonify({"result": ""})
+
+
+@app.route("/parseEducation", methods=['POST'])
+def parseEducation():
+    data = request.json
+    for key in data:
+
+        newline = ""
+        oldLine = ""
+        with open("../CV-Builder-client/ihope.tex", "r+") as file:
+            for line in file:
+                print(line)
+                print(key)
+
+                if re.search(key,line):
+                    oldLine = line
+                    newline = re.sub(key, data[key], line)
+                    line.replace(line,newline)
+        file.close()
+
+        with open("../CV-Builder-client/ihope.tex", "r+") as file:
+            lines = file.readlines()  # Read all lines into a list
+
+            for i, line in enumerate(lines):
+                if line.strip() == oldLine.strip():
+                    lines[i] = newline # Replace the old line with newline
+
+            file.seek(0)  # Move the file pointer to the beginning
+            file.writelines(lines)  # Write the modified lines back to the file
+        file.close()
+
+        
+    # Compile LaTeX to PDF
+    compile_latex_to_pdf(latex_file_path)
+
+    return jsonify({"message": "success",
+                    "data": "data"})
 
 
 
+@app.route("/parseExperience", methods=['POST'])
+def parseExperience():
+    data = request.data.decode("utf-8")
+    data = json.loads(data)
 
+    for key in data:
+
+        newline = ""
+        oldLine = ""
+        with open("../CV-Builder-client/ihope.tex", "r+") as file:
+            for line in file:
+                if re.search(key,line):
+                    oldLine = line
+                    newline = re.sub(key, data[key], line)
+                    line.replace(line,newline)
+        file.close()
+
+        with open("../CV-Builder-client/ihope.tex", "r+") as file:
+            lines = file.readlines()  # Read all lines into a list
+
+            for i, line in enumerate(lines):
+                if line.strip() == oldLine.strip():
+                    lines[i] = newline # Replace the old line with newline
+
+            file.seek(0)  # Move the file pointer to the beginning
+            file.writelines(lines)  # Write the modified lines back to the file
+        file.close()
+        
+
+    # Compile LaTeX to PDF
+    compile_latex_to_pdf(latex_file_path)
+
+    return jsonify({"message": "success"})
 
     
 
