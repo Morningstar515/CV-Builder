@@ -1,22 +1,22 @@
 export default function AddProject(props){
 
     const handleProjectTitle = (e) => {
-        props.resumeObj["projectTitle" + props.id] = e.target.value;
+        props.resumeObj["projectTitle" + (props.id + 1)] = e.target.value;
     }
     const handleTools = (e) => {
-        props.resumeObj["toolsUsed" + props.id] = e.target.value;
+        props.resumeObj["toolsUsed" + (props.id + 1)] = e.target.value;
     }
     const handleDescription1 = (e) => {
-        props.resumeObj["description1" + props.id] = e.target.value;
+        props.resumeObj["descriptionA" + (props.id + 1)] = e.target.value;
     }
     const handleDescription2 = (e) => {
-        props.resumeObj["description2" + props.id] = e.target.value;
+        props.resumeObj["descriptionB" + (props.id + 1)] = e.target.value;
     }
     const handleDescription3 = (e) => {
-        props.resumeObj["description3" + props.id] = e.target.value;
+        props.resumeObj["descriptionC" + (props.id + 1)] = e.target.value;
     }
     const handleDescription4 = (e) => {
-        props.resumeObj["description4" + props.id] = e.target.value;
+        props.resumeObj["descriptionD" + (props.id + 1)] = e.target.value;
     }
 
     return(

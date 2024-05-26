@@ -48,7 +48,6 @@ export default function EducationAndMore(props){
                     props.refresh()
                 })
         }
-
     }
 
 

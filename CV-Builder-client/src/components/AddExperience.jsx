@@ -1,39 +1,39 @@
 export default function AddExperience(props){
 
     const handlePosition = (e) =>{
-        props.resumeObj["positionTitle" + props.id] = e.target.value;
+        props.resumeObj["experienceTitle" + (props.id + 1)] = e.target.value;
     }
     
     const handleCompanyName = (e) =>{
-        props.resumeObj["companyName" + props.id] = e.target.value;
+        props.resumeObj["companyName" + (props.id + 1)] = e.target.value;
     }
 
     const handleStartDate = (e) =>{
-        props.resumeObj["startDate" + props.id] = e.target.value;
+        props.resumeObj["startDate" + (props.id + 1)] = e.target.value;
     }
 
     const handleEndDate = (e) =>{
-        props.resumeObj["endDate" + props.id] = e.target.value;
+        props.resumeObj["endDate" + (props.id + 1)] = e.target.value;
     }
 
     const handleLocation = (e) =>{
-        props.resumeObj["location" + props.id] = e.target.value;
+        props.resumeObj["location" + (props.id + 1)] = e.target.value;
     }
 
     const handleDescriptionOne = (e) =>{
-        props.resumeObj["DescriptionA" + props.id] = e.target.value;
+        props.resumeObj["descriptionA" + (props.id + 1)] = e.target.value;
     }
 
     const handleDescriptionTwo = (e) =>{
-        props.resumeObj["DescriptionB" + props.id] = e.target.value;
+        props.resumeObj["descriptionB" + (props.id + 1)] = e.target.value;
     }
 
     const handleDescriptionThree = (e) =>{
-        props.resumeObj["DescriptionC" + props.id] = e.target.value;
+        props.resumeObj["descriptionC" + (props.id + 1)] = e.target.value;
     }
 
     const handleDescriptionFour = (e) =>{
-        props.resumeObj["DescriptionD" + props.id] = e.target.value;
+        props.resumeObj["descriptionD" + (props.id + 1)] = e.target.value;
     }
 
     

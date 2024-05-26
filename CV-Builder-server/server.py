@@ -9,11 +9,12 @@ import os
 from flask_cors import CORS
 import msql
 import re
+import time
 
 
 app = Flask(__name__)
 CORS(app)
-
+currIndex = 0
 
 def compile_latex_to_pdf(latex_file_path):
     # Get the directory containing the LaTeX file
@@ -33,6 +34,15 @@ def compile_latex_to_pdf(latex_file_path):
     return os.path.join(latex_dir, f"{latex_basename}.pdf")
 
 
+def compileText():
+    with open('../CV-Builder-client/ihope.txt', 'r') as txt_file:
+        content = txt_file.read()
+
+    with open('../CV-Builder-client/ihope.tex', 'w') as tex_file:
+            tex_file.write(content)
+
+
+
 
 def returnTemplate(templateName):
     mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
@@ -42,15 +52,15 @@ def returnTemplate(templateName):
 
 
     for i in mycursor:     
-        with open("../CV-Builder-client/ihope.tex", "w") as file:
+        with open("../CV-Builder-client/ihope.txt", "w") as file:
             # Write your string into the file
             file.write(i[0])
-        file.close()
-
+    compileText()
     compile_latex_to_pdf("../CV-Builder-client/ihope.tex")
 
 test = returnTemplate("jakes")
-  
+
+
 
 def open_pdf(pdf_file_path):
     # Check if the PDF file exists
@@ -76,6 +86,19 @@ def restart():
 def testy():
     return jsonify({"result": "farts"})
 
+def replace_capitalized_words(file_path, replacements):
+
+    with open(file_path, 'r') as file:
+        content = file.read()
+    def replacer(match):
+        word = match.group(0)
+        return replacements.get(word, word)
+
+    modified_content = re.sub(r'\b[A-Z][A-Z0-9]*\b', replacer, content)
+
+    with open(file_path, 'w') as file:
+        file.write(modified_content)
+
 
 
 
@@ -83,7 +106,7 @@ def testy():
 def addEducationHeader():
 
     # Read file till insertion point found and end of document     
-    with open("../CV-Builder-client/ihope.tex", "r") as file:
+    with open("../CV-Builder-client/ihope.txt", "r") as file:
         content = file.readlines()
         index = 0
         for line in content:
@@ -92,22 +115,104 @@ def addEducationHeader():
             index += 1
 
         # Rewrite to file and insert new section at 'index' from previous loop
-        with open("../CV-Builder-client/ihope.tex", "w") as file:
+        with open("../CV-Builder-client/ihope.txt", "r+") as file:
             writeLine = 0
             for line in content:
                 if writeLine == index:
                     file.write('\section{Education}' + '\n' + '\\resumeSubHeadingListStart' + '\n' + '\n' + '\\resumeSubHeadingListEnd' + '\n')
+                # Write your string into the file
+                file.write(line)
+                writeLine += 1
+    compileText()
+    compile_latex_to_pdf(latex_file_path)
+    return jsonify({"message":"success"})
+
+
+@app.route("/addExperience", methods=['GET'])
+def addExperienceHeader():
+
+    # Read file till insertion point found and end of document     
+    with open("../CV-Builder-client/ihope.txt", "r+") as file:
+        content = file.readlines()
+        index = 0
+        for line in content:
+            if "\end{document}" in line:
+                break;
+            index += 1
+
+        # Rewrite to file and insert new section at 'index' from previous loop
+        with open("../CV-Builder-client/ihope.txt", "r+") as file:
+            writeLine = 0
+            for line in content:
+                if writeLine == index:
+                    file.write('\section{Experience}' + '\n' + '\\resumeSubHeadingListStart' + '\n' + '\n' + '\\resumeSubHeadingListEnd' + '\n')
 
                 # Write your string into the file
                 file.write(line)
                 writeLine += 1
-        file.close()
-    file.close()
+            
+    compileText()
     compile_latex_to_pdf(latex_file_path)
     return jsonify({"message":"success"})
 
 
 
+@app.route("/addProjects", methods=['GET'])
+def addProjectsHeader():
+
+    # Read file till insertion point found and end of document     
+    with open("../CV-Builder-client/ihope.txt", "r") as file:
+        content = file.readlines()
+        index = 0
+        for line in content:
+            if "\end{document}" in line:
+                break;
+            index += 1
+
+        # Rewrite to file and insert new section at 'index' from previous loop
+        with open("../CV-Builder-client/ihope.txt", "r+") as file:
+            writeLine = 0
+            for line in content:
+                if writeLine == index:
+                    file.write('\section{Projects}' + '\n' + '\\resumeSubHeadingListStart' + '\n' + '\n' + '\\resumeSubHeadingListEnd' + '\n')
+                # Write your string into the file
+                file.write(line)
+                writeLine += 1
+    compileText()
+    compile_latex_to_pdf(latex_file_path)
+    return jsonify({"message":"success"})
+
+
+@app.route("/addSkills", methods=['GET'])
+def addSkillsHeader():
+
+    # Read file till insertion point found and end of document     
+    with open("../CV-Builder-client/ihope.txt", "r") as file:
+        content = file.readlines()
+        index = 0
+        for line in content:
+            if "\end{document}" in line:
+                break;
+            index += 1
+
+        # Rewrite to file and insert new section at 'index' from previous loop
+        with open("../CV-Builder-client/ihope.txt", "r+") as file:
+            writeLine = 0
+            for line in content:
+                if writeLine == index:
+                    file.write('\section{Technical Skills}' + '\n' +  "\\begin{itemize}[leftmargin=0.15in, label={}]" + '\n' + '\n' + '\\end{itemize}' + '\n')
+                # Write your string into the file
+                file.write(line)
+                writeLine += 1
+    compileText()
+    compile_latex_to_pdf(latex_file_path)
+    return jsonify({"message":"success"})
+
+
+##########################################################################################################
+
+
+## Basics
 @app.route("/parseBasics", methods=['POST'])
 def parseBasics():
     data = request.data.decode("utf-8")
@@ -120,7 +225,7 @@ def parseBasics():
 
     for i in mycursor:
         # Read file till insertion point found and end of document     
-        with open("../CV-Builder-client/ihope.tex", "r") as file:
+        with open("../CV-Builder-client/ihope.txt", "r") as file:
             content = file.readlines()
             index = 0
             for line in content:
@@ -129,7 +234,7 @@ def parseBasics():
                 index += 1
 
             # Rewrite to file and insert new section at 'index' from previous loop
-            with open("../CV-Builder-client/ihope.tex", "w") as file:
+            with open("../CV-Builder-client/ihope.txt", "r+") as file:
                 writeLine = 0
                 for line in content:
                     if writeLine == index:
@@ -139,42 +244,22 @@ def parseBasics():
                     file.write(line)
                     writeLine += 1
 
+    replace_capitalized_words("../CV-Builder-client/ihope.txt", data)
+        
+    compileText()
+    # Compile LaTeX to PDF
+    compile_latex_to_pdf(latex_file_path)
 
+    return jsonify({"result": ""})
 
-    for key in data:
-        newline = ""
-        oldLine = ""
-        with open("../CV-Builder-client/ihope.tex", "r+") as file:
-            for line in file:
-                if re.search(key,line):
-                    oldLine = line
-                    newline = re.sub(key, data[key], line)
-                    break;
-                    #line.replace(line,newline)
-        if oldLine:    
-            with open("../CV-Builder-client/ihope.tex", "r+") as file:
-                lines = file.readlines()
+##############################################################################################################
 
-                for i, line in enumerate(lines):
-                    if line.strip() == oldLine.strip():
-                        lines[i] = newline
-
-                file.seek(0)
-                file.truncate()
-                file.writelines(lines) 
-            
-            with open("../CV-Builder-client/ihope.tex", "r") as file:
-                for line in file:
-                    print(line)
-
-        # Compile LaTeX to PDF
-        compile_latex_to_pdf(latex_file_path)
-        return jsonify({"result": ""})
-
-
+## Education
 @app.route("/parseEducation", methods=['POST'])
 def parseEducation():
     data = request.json
+    print(data)
+    print('<<<<')
 
     # Pull section from DB
     mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
@@ -188,8 +273,9 @@ def parseEducation():
         tup = (mod,)
         i = tup
 
+
         # Read file till insertion point found and end of document     
-        with open("../CV-Builder-client/ihope.tex", "r") as file:
+        with open("../CV-Builder-client/ihope.txt", "r") as file:
             content = file.readlines()
             
             pastLocationMarker = False  #To account for latex headers with the same name, this allows us to not insert unless we have passed the marker for a certain section
@@ -202,86 +288,255 @@ def parseEducation():
                     break;
                 index += 1
 
-            # Rewrite to file and insert new section at 'index' from previous loop
-            with open("../CV-Builder-client/ihope.tex", "w") as file:
-                writeLine = 0
-                for line in content:
-                    if writeLine == index:
-                        file.write(i[0] + '\n')
+        # Rewrite to file and insert new section at 'index' from previous loop
+        with open("../CV-Builder-client/ihope.txt", "r+") as file:
+            writeLine = 0
+            for line in content:
+                if writeLine == index:
+                    file.write(i[0] + '\n')
 
-                    # Write your string into the file
-                    file.write(line)
-                    writeLine += 1
-            file.close()
-        file.close()
+                # Write your string into the file
+                file.write(line)
+                writeLine += 1
+                
 
-    for key in data:
-
-        newline = ""
-        oldLine = ""
-        with open("../CV-Builder-client/ihope.tex", "r+") as file:
-            for line in file:
-
-                if re.search(key,line):
-                    oldLine = line
-                    newline = re.sub(key, data[key], line)
-                    line.replace(line,newline)
-        file.close()
-
-        with open("../CV-Builder-client/ihope.tex", "r+") as file:
-            lines = file.readlines()  
-            for i, line in enumerate(lines):
-                if line.strip() == oldLine.strip():
-                    lines[i] = newline
-
-            file.seek(0)
-            file.writelines(lines)
-        file.close()
-
-        
-    # Compile LaTeX to PDF
+    replace_capitalized_words("../CV-Builder-client/ihope.txt", data)
+    compileText()
+        # Compile LaTeX to PDF
     compile_latex_to_pdf(latex_file_path)
 
     return jsonify({"message": "success",
                     "data": "data"})
 
+###########################################################################################################
 
-
+## Experience
 @app.route("/parseExperience", methods=['POST'])
 def parseExperience():
     data = request.json
+    # Pull section from DB
+    mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
+    mycursor = mydb.cursor()
+    mycursor.execute("select Experience from JakesTable")
 
-    # data = request.data.decode("utf-8")
-    # data = json.loads(data)
-
-    for key in data:
-
-        newline = ""
-        oldLine = ""
-        with open("../CV-Builder-client/ihope.tex", "r+") as file:
-            for line in file:
-                if re.search(key,line):
-                    oldLine = line
-                    newline = re.sub(key, data[key], line)
-                    line.replace(line,newline)
-        file.close()
-
-        with open("../CV-Builder-client/ihope.tex", "r+") as file:
-            lines = file.readlines()  # Read all lines into a list
-
-            for i, line in enumerate(lines):
-                if line.strip() == oldLine.strip():
-                    lines[i] = newline # Replace the old line with newline
-
-            file.seek(0)  # Move the file pointer to the beginning
-            file.writelines(lines)  # Write the modified lines back to the file
-        file.close()
+    for i in mycursor:
         
+        #Replacing ending number this correct entry number
+        mod = i[0].replace('1',str(data["count"][0]))
+        tup = (mod,)
+        i = tup
 
+        # Read file till insertion point found and end of document     
+        with open("../CV-Builder-client/ihope.txt", "r") as file:
+            content = file.readlines()
+            
+            pastLocationMarker = False  #To account for latex headers with the same name, this allows us to not insert unless we have passed the marker for a certain section
+            index = 0
+            for line in content:
+                if "\\section{Experience}" in line:
+                    pastLocationMarker = True
+
+                if "\\resumeSubHeadingListEnd" in line and pastLocationMarker:
+                    break;
+                index += 1
+
+            
+        # Rewrite to file and insert new section at 'index' from previous loop
+        with open("../CV-Builder-client/ihope.txt", "r+") as file:
+            writeLine = 0
+            for line in content:
+                if writeLine == index:
+                    file.write(i[0] + '\n')
+
+                # Write your string into the file
+                file.write(line)
+                writeLine += 1
+
+    #Append the new data
+    with open("../CV-Builder-client/ihope.txt", "r+") as file:
+        content = file.readlines()    
+
+        for key in data:
+            if key == 'count':
+                continue
+            
+            for i in range (len(content)):
+
+                if re.search(key,content[i]):
+                    oldLine = content[i]
+                    new = re.sub(key,data[key],oldLine)
+                    content[i] = new
+       
+        file.seek(index)
+        for line in content:
+            file.write(line)
+            
+    replace_capitalized_words("../CV-Builder-client/ihope.txt", data)
+    compileText()
     # Compile LaTeX to PDF
     compile_latex_to_pdf(latex_file_path)
-
     return jsonify({"message": "success"})
+
+###########################################################################################################
+
+# Projects
+@app.route("/parseProjects", methods=['POST'])
+def parseProjects():
+    data = request.json
+
+    # Pull section from DB
+    mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
+    mycursor = mydb.cursor()
+    mycursor.execute("select Projects from JakesTable")
+
+    for i in mycursor:
+        
+        #Replacing ending number this correct entry number
+        mod = i[0].replace('1',str(data["count"][0]))
+        tup = (mod,)
+        i = tup
+
+        # Read file till insertion point found and end of document     
+        with open("../CV-Builder-client/ihope.txt", "r") as file:
+            content = file.readlines()
+            
+            #To account for latex headers with the same name, this allows us to not insert unless we have passed 
+            #the marker for a certain section         
+            pastLocationMarker = False  
+            index = 0
+            for line in content:
+                if "\\section{Projects}" in line:
+                    pastLocationMarker = True
+
+                if "\\resumeSubHeadingListEnd" in line and pastLocationMarker:
+                    break;
+                index += 1
+
+            
+        # Rewrite to file and insert new section at 'index' from previous loop
+        with open("../CV-Builder-client/ihope.txt", "r+") as file:
+            writeLine = 0
+            for line in content:
+                if writeLine == index:
+                    file.write(i[0] + '\n')
+
+                # Write your string into the file
+                file.write(line)
+                writeLine += 1
+
+    #Append the new data
+    with open("../CV-Builder-client/ihope.txt", "r+") as file:
+        content = file.readlines()    
+        for key in data:
+            if key == 'count':
+                continue
+            
+            for i in range (len(content)):
+
+                if re.search(key,content[i]):
+                    oldLine = content[i]
+                    new = re.sub(key,data[key],oldLine)
+                    content[i] = new
+       
+        file.seek(index)
+        for line in content:
+            file.write(line)
+            
+    replace_capitalized_words("../CV-Builder-client/ihope.txt", data)
+    compileText()
+    # Compile LaTeX to PDF
+    compile_latex_to_pdf(latex_file_path)
+    return jsonify({"message": "success"})
+
+
+###########################################################################################################
+
+# Skills
+@app.route("/parseSkills", methods=['POST'])
+def parseSkills():
+    data = request.json
+    print(data)
+    print('<<<<<!!')
+
+    # Pull section from DB
+    mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
+    mycursor = mydb.cursor()
+    mycursor.execute("select Skills from JakesTable")
+
+    for i in mycursor:
+        
+        #Replacing ending number this correct entry number
+        mod = i[0].replace('1',str(data["count"][0]))
+        tup = (mod,)
+        i = tup
+
+        # Read file till insertion point found and end of document     
+        with open("../CV-Builder-client/ihope.txt", "r") as file:
+            content = file.readlines()
+            
+            #To account for latex headers with the same name, this allows us to not insert unless we have passed 
+            #the marker for a certain section         
+            pastLocationMarker = False  
+            index = 0
+            for line in content:
+                if "\\section{Technical Skills}" in line:
+                    pastLocationMarker = True
+
+                if "\\end{itemize}" in line and pastLocationMarker:
+                    break;
+                index += 1
+
+            
+        # Rewrite to file and insert new section at 'index' from previous loop
+        with open("../CV-Builder-client/ihope.txt", "r+") as file:
+            writeLine = 0
+            for line in content:
+                print(writeLine)
+                print(index)
+                if writeLine == index:
+                    print(i[0])
+                    file.write(i[0] + '\n')
+
+                    print('????')
+                    print('????')
+                    print('????')
+                # Write your string into the file
+                file.write(line)
+                writeLine += 1
+
+    #Append the new data
+    with open("../CV-Builder-client/ihope.txt", "r+") as file:
+        content = file.readlines()    
+        print(data)
+        print('<<<<')
+        for key in data:
+            if key == 'count':
+                continue
+            
+            for i in range (len(content)):
+
+                if re.search(key,content[i]):
+                    oldLine = content[i]
+                    new = re.sub(key,data[key],oldLine)
+                    content[i] = new
+       
+        file.seek(index)
+        for line in content:
+            file.write(line)
+            
+    replace_capitalized_words("../CV-Builder-client/ihope.txt", data)
+    compileText()
+    # Compile LaTeX to PDF
+    compile_latex_to_pdf(latex_file_path)
+    return jsonify({"message": "success"})
+
+
+
+
+
+
+
+
 
     
 
