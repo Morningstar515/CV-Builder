@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AddTechnicalSkills from "./AddTechnicalSkills";
 import BuildResume from "./BuildResume";
+import Closer from "./Closer";
 
 export default function TechnicalSkills(props){
     const[technicalSkill,setTechnicalSkill] = useState([]);
@@ -60,7 +61,7 @@ export default function TechnicalSkills(props){
                 {technicalSkill}
             </div>
             <button onClick={() => {append();callHeader()}} className="flex w-1/5 min-h-10 bg-blue-400 rounded-md text-white justify-center items-center">Add skill set</button>
-            <button form="EducationForm" onClick={()=> {updatePdf()}} className="mn-10 mt-4 min-h-10 w-1/6 bg-blue-400 text-white rounded-md hover:bg-blue-500 font-medium text-xl">Finalize Resume</button>
+            <button form="EducationForm" onClick={()=> {props.change(<Closer/>) ;updatePdf()}} className="mn-10 mt-4 min-h-10 w-1/6 bg-blue-400 text-white rounded-md hover:bg-blue-500 font-medium text-xl">Finalize Resume</button>
 
         </>
     )

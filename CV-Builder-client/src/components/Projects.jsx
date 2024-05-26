@@ -74,7 +74,7 @@ export default function Projects(props){
                 {projectsArray}
             </div>
             <button onClick={() => {append();callHeader()}} className="flex w-1/5 min-h-10 bg-blue-400 rounded-md text-white justify-center items-center">Add Project</button>
-            <button form="EducationForm" onClick={()=> {props.change(<TechnicalSkills change ={props.change} resumeObj = {props.resumeObj} refresh={props.refresh}/>);updatePdf()}} className="mn-10 min-h-10 w-24 bg-blue-400 text-white rounded-md hover:bg-blue-500 font-medium text-xl">Next</button>
+            <button form="EducationForm" onClick={()=> {props.change(<TechnicalSkills change ={props.change} resumeObj = {props.resumeObj} refresh={props.refresh}/>);updatePdf()}} className="mn-10 min-h-10 mt-4 w-24 bg-blue-400 text-white rounded-md hover:bg-blue-500 font-medium text-xl">Next</button>
 
         </>
     )
