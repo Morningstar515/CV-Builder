@@ -3,17 +3,6 @@
 % Resume in Latex
 % Author : Jake Gutierrez
 % Based off of: https://github.com/sb2nov/resume
-% Lic
-%-----------------
-%-------------------------
-% Resume in Latex
-% Author : Jake Gutierrez
-% Based off of: https://github.com/sb2nov/resume
-% Lic
-%-------------------------
-% Resume in Latex
-% Author : Jake Gutierrez
-% Based off of: https://github.com/sb2nov/resume
 % License : MIT
 %------------------------
 
@@ -117,9 +106,6 @@
 
 \begin{document}
 
-
-%-------------------------------------------
-
 %----------HEADING----------
 % \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
 %   \textbf{\href{http://sourabhbajaj.com/}{\Large Sourabh Bajaj}} & Email : \href{mailto:sourabh@sourabhbajaj.com}{sourabh@sourabhbajaj.com}\\
@@ -127,40 +113,105 @@
 % \end{tabular*}
 
 \begin{center}
-    \textbf{\Huge \scshape } \\ \vspace{1pt}
-    \small  $|$ \href{mailto:x@x.com}{\underline{}} $|$ 
-    \href{https://linkedin.com/in/...}{\underline{linkedin.com/in/}} $|$
-    \href{https://github.com/...}{\underline{github.com/}} 0
+    \textbf{\Huge \scshape NAME} \\ \vspace{1pt}
+    \small PHONE $|$ \href{mailto:x@x.com}{\underline{EMAIL}} $|$ 
+    \href{https://linkedin.com/in/...}{\underline{linkedin.com/in/LINKEDIN}} $|$
+    \href{https://github.com/...}{\underline{github.com/GITHUB}}
 \end{center}
+
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {SCHOOL1}{SCHOOLLOCATION1, SCHOOLSTATE1}
+      {DEGREE1}{DEGREESTART1 -- DEGREEEND1}
+    \resumeSubheading
+      {SCHOOL2}{SCHOOLLOCATION2, SCHOOLSTATE2}
+      {DEGREE2}{DEGREESTART2 -- DEGREEEND2}
+  \resumeSubHeadingListEnd
+
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {EXPERIENCE1}{STARTDATE1 -- ENDDATE1}
+      {COMPANY1}{LOCATION1, STATE1}
+      \resumeItemListStart
+        \resumeItem{EXPERIENCE1BULLET1}
+        \resumeItem{EXPERIENCE1BULLET2}
+        \resumeItem{EXPERIENCE1BULLET3}
+      \resumeItemListEnd
+      
+% -----------Multiple Positions Heading-----------
+%    \resumeSubSubheading
+%     {Software Engineer I}{Oct 2014 - Sep 2016}
+%     \resumeItemListStart
+%        \resumeItem{Apache Beam}
+%          {Apache Beam is a unified model for defining both batch and streaming data-parallel processing pipelines}
+%     \resumeItemListEnd
+%    \resumeSubHeadingListEnd
+%-------------------------------------------
+
+    \resumeSubheading
+      {EXPERIENCE2}{STARTDATE2 -- ENDDATE2}
+      {COMPANY2}{LOCATION2, STATE2}
+      \resumeItemListStart
+        \resumeItem{EXPERIENCE2BULLET1}
+        \resumeItem{EXPERIENCE2BULLET2}
+        \resumeItem{EXPERIENCE2BULLET3}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {EXPERIENCE3}{STARTDATE3 -- ENDDATE3}
+      {COMPANY3}{LOCATION3, STATE3}
+      \resumeItemListStart
+        \resumeItem{EXPERIENCE3BULLET1}
+        \resumeItem{EXPERIENCE3BULLET2}
+        \resumeItem{EXPERIENCE3BULLET3}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+
+%-----------PROJECTS-----------
 \section{Projects}
-\resumeSubHeadingListStart
-
-
+    \resumeSubHeadingListStart
       \resumeProjectHeading
-          {\textbf{PROJECTTITLE1} $|$ \emph{TECHLIST1}}{}
+          {\textbf{PROJECTTITLE1} $|$ \emph{TECHLIST1}}{PSTARTDATE1 -- PSTENDDATE1}
           \resumeItemListStart
             \resumeItem{PROJECT1BULLET1}
             \resumeItem{PROJECT1BULLET2}
             \resumeItem{PROJECT1BULLET3}
             \resumeItem{PROJECT1BULLET4}
           \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{PROJECTTITLE2} $|$ \emph{TECHLIST2}}{PSTARTDATE2 -- PSTENDDATE2}
+          \resumeItemListStart
+            \resumeItem{PROJECT2BULLET1}
+            \resumeItem{PROJECT2BULLET2}
+            \resumeItem{PROJECT2BULLET3}
+            \resumeItem{PROJECT2BULLET4}
+          \resumeItemListEnd
+    \resumeSubHeadingListEnd
 
-\resumeSubHeadingListEnd
+
+
+%
+%-----------PROGRAMMING SKILLS-----------
 \section{Technical Skills}
-\begin{itemize}[leftmargin=0.15in, label={}]
-
-
+ \begin{itemize}[leftmargin=0.15in, label={}]
     \small{\item{
-     \textbf{Languages}{: Java, PHP, Golang} 
-
-     \textbf{SKILLSTITLE2}{: SKILLS2} 
-
-     \textbf{SKILLSTITLE3}{: SKILLS3} 
-
-     \textbf{SKILLSTITLE4}{: SKILLS4}	
-
+     \textbf{SKILLSTITLE1}{: SKILLS1} \\
+     \textbf{SKILLSTITLE2}{: SKILLS2} \\
+     \textbf{SKILLSTITLE3}{: SKILLS3} \\
+     \textbf{SKILLSTITLE4}{: SKILLS4}
     }}
+ \end{itemize}
 
-\end{itemize}
+
+%-------------------------------------------
 \end{document}
 

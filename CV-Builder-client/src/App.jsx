@@ -21,7 +21,7 @@ function App() {
 	}
 	function reset(){
 		handleState(<Hero change = {handleState} refresh={refresh}/>)
-		fetch('http://localhost:5000/jakes',{
+		fetch('http://localhost:5000/default',{
 			method: "GET",
 			headers: {
 				'Content-Type': "application/json"
