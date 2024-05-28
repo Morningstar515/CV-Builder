@@ -22,10 +22,13 @@ function App() {
 	function reset(){
 		handleState(<Hero change = {handleState} refresh={refresh}/>)
 		fetch('http://localhost:5000/default',{
-			method: "GET",
+			method: "POST",
 			headers: {
 				'Content-Type': "application/json"
 			},
+			body: JSON.stringify({
+				template: "Jakes"
+			})
 		})
 		.then((res) => res.json())
 		.then((data) => refresh())

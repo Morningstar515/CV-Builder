@@ -15,6 +15,50 @@ import time
 app = Flask(__name__)
 CORS(app)
 
+
+
+## Dictionaries for appropriate Latex commands              TODO: Move to DB
+dicts = {
+
+    "Jakes": {
+        "end": r"\end{document}", 
+        "education": "\\section{Education}  \n  \\resumeSubHeadingListStart  \n  \\resumeSubHeadingListEnd \n",
+
+        "experience": "\\section{Experience} \n \\resumeSubHeadingListStart \n \\resumeSubHeadingListEnd \n",
+
+        "projects": "\\section{Projects} \n \\resumeSubHeadingListStart \n \\resumeSubHeadingListEnd \n",
+        "skills": "\\section{Technical Skills} \n \\resumeSubHeadingListStart \n \\resumeSubHeadingListEnd \n" 
+    },
+    "Stylish": {
+        "end": r"\end{center}", 
+        "education": r"""\section{Education}
+            \begin{tabularx}{0.97\linewidth}{>{\raggedleft\scshape}p{2cm}X}
+
+            \end{tabularx}
+            """,
+        "experience": r"""\section{Experience}
+            \begin{tabularx}{0.97\linewidth}{>{\raggedleft\scshape}p{2cm}X}
+        
+            \end{tabularx}
+            """,
+
+        "projects": r"""\section{Projects}
+            \begin{tabularx}{0.97\linewidth}{>{\raggedleft\scshape}p{2cm}X}
+
+            \end{tabularx}
+            """,
+        "skills": r"""\section{Technical Skills}
+            \begin{tabular}{ @{} >{\bfseries}l @{\hspace{6ex}} l }
+
+            \end{tabular}
+            """
+    }
+}
+
+
+##Chosen Template
+template = 'Jakes'
+
 ## Compile pdf
 def compile_latex_to_pdf(latex_file_path):
     latex_dir = os.path.dirname(latex_file_path)
@@ -33,11 +77,11 @@ def compileText():
     with open('../CV-Builder-client/ihope.tex', 'w') as tex_file:
             tex_file.write(content)
 
-
-def defaultPage():
+## Show Complete Page with selector values
+def defaultPage(selectedTemplate):
     mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
     mycursor = mydb.cursor()
-    mycursor.execute("select Templates from TemplateTable where keyid='jakes' " )
+    mycursor.execute("select Templates from TemplateTable where keyid= %s ", (selectedTemplate,) )
     for i in mycursor:     
         with open("../CV-Builder-client/ihope.txt", "w") as file:
             # Write your string into the file
@@ -45,12 +89,12 @@ def defaultPage():
     compileText()
     compile_latex_to_pdf("../CV-Builder-client/ihope.tex")
 
-
-def baseTex():
+## Get just the base tex from DB
+def baseTex(template):
     mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
     mycursor = mydb.cursor()
-    mycursor.execute("select BaseTex from JakesTable")
 
+    mycursor.execute(f"select BaseTex from {template}Table")
 
     for i in mycursor:     
         with open("../CV-Builder-client/ihope.txt", "w") as file:
@@ -58,34 +102,6 @@ def baseTex():
             file.write(i[0])
     compileText()
     compile_latex_to_pdf("../CV-Builder-client/ihope.tex")
-
-
-
-
-def open_pdf(pdf_file_path):
-    # Check if the PDF file exists
-    if os.path.exists(pdf_file_path):
-        # Open the PDF file using the default PDF viewer
-        subprocess.run(['xdg-open', pdf_file_path])
-    else:
-        print(f"Error: PDF file '{pdf_file_path}' not found.")
-
-
-# Original Compile
-latex_file_path = '../CV-Builder-client/ihope.tex'
-pdf_file_path = compile_latex_to_pdf(latex_file_path)
-
-
-# Routes
-@app.route("/baseTex", methods=['GET'])
-def base():
-    baseTex()
-    return jsonify({"result": "success"})
-
-@app.route("/default", methods=['GET'])
-def default():
-    defaultPage()
-    return jsonify({"result": "success"})
 
 ## Helper function
 def replace_capitalized_words(file_path, replacements):
@@ -102,7 +118,32 @@ def replace_capitalized_words(file_path, replacements):
 
 
 
+# Original Compile
+latex_file_path = '../CV-Builder-client/ihope.tex'
+defaultPage(template)
 
+
+# Misc Routes
+@app.route("/baseTex", methods=['GET', 'POST'])
+def base():
+    data = request.json
+    baseTex(data["base"])
+    return jsonify({"result": "success"})
+
+@app.route("/default", methods=['GET', 'POST'])
+def default():
+    data = request.json
+    defaultPage(data["template"])
+    return jsonify({"result": "success"})
+
+@app.route("/setTemplate", methods=['POST'])
+def setTemplate():
+    data = request.json
+    global template 
+    template = data["template"]
+    return jsonify({"result": "success"})
+
+## Banner Routes
 @app.route("/addEducation", methods=['GET'])
 def addEducationHeader():
 
@@ -111,7 +152,7 @@ def addEducationHeader():
         content = file.readlines()
         index = 0
         for line in content:
-            if "\end{document}" in line:
+            if dicts[template]["end"] in line:
                 break;
             index += 1
 
@@ -120,7 +161,7 @@ def addEducationHeader():
             writeLine = 0
             for line in content:
                 if writeLine == index:
-                    file.write('\section{Education}' + '\n' + '\\resumeSubHeadingListStart' + '\n' + '\n' + '\\resumeSubHeadingListEnd' + '\n')
+                    file.write(dicts[template]["education"])
                 # Write your string into the file
                 file.write(line)
                 writeLine += 1
@@ -137,7 +178,7 @@ def addExperienceHeader():
         content = file.readlines()
         index = 0
         for line in content:
-            if "\end{document}" in line:
+            if dicts[template]["end"] in line:
                 break;
             index += 1
 
@@ -146,7 +187,7 @@ def addExperienceHeader():
             writeLine = 0
             for line in content:
                 if writeLine == index:
-                    file.write('\section{Experience}' + '\n' + '\\resumeSubHeadingListStart' + '\n' + '\n' + '\\resumeSubHeadingListEnd' + '\n')
+                    file.write(dicts[template]["experience"])
 
                 # Write your string into the file
                 file.write(line)
@@ -166,7 +207,7 @@ def addProjectsHeader():
         content = file.readlines()
         index = 0
         for line in content:
-            if "\end{document}" in line:
+            if dicts[template]["end"] in line:
                 break;
             index += 1
 
@@ -175,7 +216,7 @@ def addProjectsHeader():
             writeLine = 0
             for line in content:
                 if writeLine == index:
-                    file.write('\section{Projects}' + '\n' + '\\resumeSubHeadingListStart' + '\n' + '\n' + '\\resumeSubHeadingListEnd' + '\n')
+                    file.write(dicts[template]["projects"])
                 # Write your string into the file
                 file.write(line)
                 writeLine += 1
@@ -192,7 +233,7 @@ def addSkillsHeader():
         content = file.readlines()
         index = 0
         for line in content:
-            if "\end{document}" in line:
+            if dicts[template]["end"] in line:
                 break;
             index += 1
 
@@ -201,7 +242,7 @@ def addSkillsHeader():
             writeLine = 0
             for line in content:
                 if writeLine == index:
-                    file.write('\section{Technical Skills}' + '\n' +  "\\begin{itemize}[leftmargin=0.15in, label={}]" + '\n' + '\n' + '\\end{itemize}' + '\n')
+                    file.write(dicts[template]["skills"])
                 # Write your string into the file
                 file.write(line)
                 writeLine += 1
@@ -222,15 +263,16 @@ def parseBasics():
     # Pull section from DB
     mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
     mycursor = mydb.cursor()
-    mycursor.execute("select Header from JakesTable")
+    mycursor.execute(f"select Header from {template}Table")
 
     for i in mycursor:
         # Read file till insertion point found and end of document     
         with open("../CV-Builder-client/ihope.txt", "r") as file:
             content = file.readlines()
             index = 0
+
             for line in content:
-                if "\end{document}" in line:
+                if dicts[template]["end"] in line:
                     break;
                 index += 1
             content.insert(index ,i[0] + '\n')
@@ -258,7 +300,7 @@ def parseEducation():
     # Pull section from DB
     mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
     mycursor = mydb.cursor()
-    mycursor.execute("select School from JakesTable")
+    mycursor.execute(f"select School from {template}Table")
 
     for i in mycursor:
         
@@ -276,8 +318,8 @@ def parseEducation():
             for line in content:
                 if "\\section{Education}" in line:
                     pastLocationMarker = True
-
-                if "\\resumeSubHeadingListEnd" in line and pastLocationMarker:
+                match = re.search(r'\\.*[E,e]nd.*$', dicts[template]["education"], re.MULTILINE)
+                if match.group(0) in line and pastLocationMarker:
                     break;
                 index += 1
             content.insert(index ,i[0] + '\n')
@@ -306,7 +348,7 @@ def parseExperience():
     # Pull section from DB
     mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
     mycursor = mydb.cursor()
-    mycursor.execute("select Experience from JakesTable")
+    mycursor.execute(f"select Experience from {template}Table")
 
     for i in mycursor:
     
@@ -326,7 +368,9 @@ def parseExperience():
                 if "\\section{Experience}" in line:
                     pastLocationMarker = True
 
-                if "\\resumeSubHeadingListEnd" in line and pastLocationMarker:
+                match = re.search(r'\\.*[E,e]nd.*$', dicts[template]["experience"], re.MULTILINE)
+                if match.group(0) in line and pastLocationMarker:
+                    print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
                     break;
                 index += 1
             content.insert(index ,i[0] + '\n')
@@ -372,7 +416,7 @@ def parseProjects():
     # Pull section from DB
     mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
     mycursor = mydb.cursor()
-    mycursor.execute("select Projects from JakesTable")
+    mycursor.execute(f"select Projects from {template}Table")
 
     for i in mycursor:
         
@@ -393,7 +437,8 @@ def parseProjects():
                 if "\\section{Projects}" in line:
                     pastLocationMarker = True
 
-                if "\\resumeSubHeadingListEnd" in line and pastLocationMarker:
+                match = re.search(r'\\.*[E,e]nd.*$', dicts[template]["projects"], re.MULTILINE)
+                if match.group(0) in line and pastLocationMarker:
                     break;
                 index += 1
             content.insert(index ,i[0] + '\n')
@@ -442,7 +487,7 @@ def parseSkills():
     # Pull section from DB
     mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
     mycursor = mydb.cursor()
-    mycursor.execute("select Skills from JakesTable")
+    mycursor.execute(f"select Skills from {template}Table")
 
     for i in mycursor:
         
@@ -463,7 +508,7 @@ def parseSkills():
                 if "\\section{Technical Skills}" in line:
                     pastLocationMarker = True
 
-                if "\\end{itemize}" in line and pastLocationMarker:
+                if dicts[template]["end"] in line and pastLocationMarker:
                     break;
                 index += 1
             content.insert(index ,i[0] + '\n')
@@ -495,8 +540,6 @@ def parseSkills():
     # Compile LaTeX to PDF
     compile_latex_to_pdf(latex_file_path)
     return jsonify({"message": "success"})
-
-
 
 
 

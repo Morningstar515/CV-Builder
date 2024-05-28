@@ -28,7 +28,6 @@ export default function TechnicalSkills(props){
         })
             .then((res) => res.json())
             .then((data) => {
-            console.log(info)
                 props.refresh()
             })
         });

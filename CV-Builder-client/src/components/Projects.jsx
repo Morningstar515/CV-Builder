@@ -29,8 +29,6 @@ export default function Projects(props){
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log(info)
-                console.log(props.resumeObj)
 
                 props.refresh()
             })

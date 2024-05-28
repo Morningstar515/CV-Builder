@@ -8,7 +8,6 @@ export default function Experience(props){
 
     const updatePdf = () => {
         experienceArray.forEach(item => {
-            console.log(item)
         // Dynamically set keys and values based on variables
         let info = {
             ["TITLE" + (item.props.id + 1)]: props.resumeObj["experienceTitle" + (item.props.id + 1)],
