@@ -1,6 +1,5 @@
 import { useState } from "react";
 import AddTechnicalSkills from "./AddTechnicalSkills";
-import BuildResume from "./BuildResume";
 import Closer from "./Closer";
 
 export default function TechnicalSkills(props){

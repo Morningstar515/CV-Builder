@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
 import Hero from './components/Hero'
-import TheBasics from './components/TheBasics'
-import axios from 'axios'
 import './App.css'
-import ReactPDF from '@react-pdf/renderer'
 
 
 function App() {

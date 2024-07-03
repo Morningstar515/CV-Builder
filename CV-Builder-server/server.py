@@ -9,7 +9,6 @@ import os
 from flask_cors import CORS
 import msql
 import re
-import time
 
 
 app = Flask(__name__)
@@ -17,7 +16,7 @@ CORS(app)
 
 
 
-## Dictionaries for appropriate Latex commands              TODO: Move to DB
+## Dictionaries for appropriate Latex commands 
 dicts = {
 
     "Jakes": {
@@ -82,10 +81,13 @@ def defaultPage(selectedTemplate):
     mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
     mycursor = mydb.cursor()
     mycursor.execute("select Templates from TemplateTable where keyid= %s ", (selectedTemplate,) )
+
     for i in mycursor:     
         with open("../CV-Builder-client/ihope.txt", "w") as file:
-            # Write your string into the file
+
+            # Write string to file
             file.write(i[0])
+
     compileText()
     compile_latex_to_pdf("../CV-Builder-client/ihope.tex")
 
@@ -98,7 +100,8 @@ def baseTex(template):
 
     for i in mycursor:     
         with open("../CV-Builder-client/ihope.txt", "w") as file:
-            # Write your string into the file
+
+            # Write string to file
             file.write(i[0])
     compileText()
     compile_latex_to_pdf("../CV-Builder-client/ihope.tex")
@@ -130,11 +133,13 @@ def base():
     baseTex(data["base"])
     return jsonify({"result": "success"})
 
+
 @app.route("/default", methods=['GET', 'POST'])
 def default():
     data = request.json
     defaultPage(data["template"])
     return jsonify({"result": "success"})
+
 
 @app.route("/setTemplate", methods=['POST'])
 def setTemplate():
@@ -162,7 +167,8 @@ def addEducationHeader():
             for line in content:
                 if writeLine == index:
                     file.write(dicts[template]["education"])
-                # Write your string into the file
+                
+                # Write string to file
                 file.write(line)
                 writeLine += 1
     compileText()
@@ -189,7 +195,7 @@ def addExperienceHeader():
                 if writeLine == index:
                     file.write(dicts[template]["experience"])
 
-                # Write your string into the file
+                # Write string to file
                 file.write(line)
                 writeLine += 1
             
@@ -217,7 +223,8 @@ def addProjectsHeader():
             for line in content:
                 if writeLine == index:
                     file.write(dicts[template]["projects"])
-                # Write your string into the file
+
+                # Write string to file
                 file.write(line)
                 writeLine += 1
     compileText()
@@ -243,7 +250,8 @@ def addSkillsHeader():
             for line in content:
                 if writeLine == index:
                     file.write(dicts[template]["skills"])
-                # Write your string into the file
+
+                # Write string to file
                 file.write(line)
                 writeLine += 1
     compileText()
@@ -253,8 +261,12 @@ def addSkillsHeader():
 
 ##########################################################################################################
 
+##########################    Parsing Data from each components input         ############################
 
-## Basics
+##########################################################################################################
+
+
+## Basics Section
 @app.route("/parseBasics", methods=['POST'])
 def parseBasics():
     data = request.data.decode("utf-8")
@@ -279,12 +291,13 @@ def parseBasics():
             # Rewrite to file and insert new section at 'index' from previous loop
             with open("../CV-Builder-client/ihope.txt", "r+") as file:
 
-                # Write your string into the file
+                # Write string to file
                 file.writelines(content)
 
     replace_capitalized_words("../CV-Builder-client/ihope.txt", data)
         
     compileText()
+
     # Compile LaTeX to PDF
     compile_latex_to_pdf(latex_file_path)
 
@@ -292,7 +305,7 @@ def parseBasics():
 
 ##############################################################################################################
 
-## Education
+## Education section
 @app.route("/parseEducation", methods=['POST'])
 def parseEducation():
     data = request.json
@@ -304,7 +317,7 @@ def parseEducation():
 
     for i in mycursor:
         
-        #Replacing ending number this correct entry number
+        #Replacing ending number with correct entry number
         mod = i[0].replace('1',str(data["count"][0]))
         tup = (mod,)
         i = tup
@@ -313,7 +326,8 @@ def parseEducation():
         with open("../CV-Builder-client/ihope.txt", "r") as file:
             content = file.readlines()
 
-            pastLocationMarker = False  #To account for latex headers with the same name, this allows us to not insert unless we have passed the marker for a certain section
+            #To account for latex headers with the same name, this prevents insertion unless we have passed the marker for a certain section
+            pastLocationMarker = False
             index = 0
             for line in content:
                 if "\\section{Education}" in line:
@@ -331,7 +345,8 @@ def parseEducation():
     replace_capitalized_words("../CV-Builder-client/ihope.txt", data)
 
     compileText()
-        # Compile LaTeX to PDF
+
+    # Compile LaTeX to PDF
     compile_latex_to_pdf(latex_file_path)
 
     return jsonify({"message": "success",
@@ -352,7 +367,7 @@ def parseExperience():
 
     for i in mycursor:
     
-        #Replacing ending number this correct entry number
+        #Replacing ending number with correct entry number
         mod = i[0].replace('1',str(data["count"][0]))
         tup = (mod,)
         i = tup
@@ -362,7 +377,8 @@ def parseExperience():
             content = file.readlines()
             file.seek(0)
 
-            pastLocationMarker = False  #To account for latex headers with the same name, this allows us to not insert unless we have passed the marker for a certain section
+            #To account for latex headers with the same name, this prevents insertion unless we have passed the marker for a certain section
+            pastLocationMarker = False
             index = 0
             for line in content:
                 if "\\section{Experience}" in line:
@@ -429,8 +445,7 @@ def parseProjects():
         with open("../CV-Builder-client/ihope.txt", "r") as file:
             content = file.readlines()
 
-            #To account for latex headers with the same name, this allows us to not insert unless we have passed 
-            #the marker for a certain section         
+            #To account for latex headers with the same name, this prevents insertion unless we have passed the marker for a certain section        
             pastLocationMarker = False  
             index = 0
             for line in content:
@@ -472,6 +487,7 @@ def parseProjects():
             
     replace_capitalized_words("../CV-Builder-client/ihope.txt", data)
     compileText()
+
     # Compile LaTeX to PDF
     compile_latex_to_pdf(latex_file_path)
     return jsonify({"message": "success"})
@@ -491,7 +507,7 @@ def parseSkills():
 
     for i in mycursor:
         
-        #Replacing ending number this correct entry number
+        #Replacing ending number with correct entry number
         mod = i[0].replace('1',str(data["count"][0]))
         tup = (mod,)
         i = tup
@@ -500,8 +516,7 @@ def parseSkills():
         with open("../CV-Builder-client/ihope.txt", "r") as file:
             content = file.readlines()
 
-            #To account for latex headers with the same name, this allows us to not insert unless we have passed 
-            #the marker for a certain section         
+            #To account for latex headers with the same name, this prevents insertion unless we have passed the marker for a certain section      
             pastLocationMarker = False  
             index = 0
             for line in content:
@@ -537,15 +552,16 @@ def parseSkills():
             
     replace_capitalized_words("../CV-Builder-client/ihope.txt", data)
     compileText()
+
     # Compile LaTeX to PDF
     compile_latex_to_pdf(latex_file_path)
     return jsonify({"message": "success"})
 
 
 
-############### Other helper functions
+############### Other helper functions #####################
+
 def convertTuple(tup):
-        # initialize an empty string
     str = ''
     for item in tup:
         str = str + item

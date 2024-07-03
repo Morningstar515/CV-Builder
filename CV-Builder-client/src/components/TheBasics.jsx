@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import EducationAndMore from './EducationAndMore';
-import axios from 'axios';
 export default function TheBasics(props){
     
     let resumeObj;
