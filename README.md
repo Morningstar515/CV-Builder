@@ -25,5 +25,5 @@
 
 **Place mysql.py file into root CV-Builder-server folder**
 
-Once database setup is completed, start a separate terminal and navigate to /CV-Builder-server to run 'python server.py', starting the server
+Once database setup is completed, start a separate terminal and navigate to /CV-Builder-server to run 'python3 server.py', starting the server
 Then start a separate terminal and navigate to /CV-Builder-client to run 'npm run dev' to start client.
