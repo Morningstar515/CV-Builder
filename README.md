@@ -12,7 +12,7 @@
   *Replace values with valid information to access your database*
   
     def paswrd():
-        return 'abc123'
+        return 'yourPasswordHere'
     
     def host():
         return 'localhost'
