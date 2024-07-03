@@ -3,11 +3,6 @@
 % Resume in Latex
 % Author : Jake Gutierrez
 % Based off of: https://github.com/sb2nov/resume
-% License : 
-%-------------------------
-% Resume in Latex
-% Author : Jake Gutierrez
-% Based off of: https://github.com/sb2nov/resume
 % License : MIT
 %------------------------
 
@@ -122,31 +117,9 @@
 
 \begin{center}
     \textbf{\Huge \scshape Tyler} \\ \vspace{1pt}
-    \small 11 $|$ \href{mailto:x@x.com}{\underline{sdfsdf@ffff}} $|$ 
+    \small  $|$ \href{mailto:x@x.com}{\underline{}} $|$ 
     \href{https://linkedin.com/in/...}{\underline{linkedin.com/in/}} $|$
     \href{https://github.com/...}{\underline{github.com/}} 0
 \end{center}
-\section{Education}  
-  \resumeSubHeadingListStart  
-
-    \resumeSubheading
-      {CSU Sacramento}{davis, SCHOOLSTATE1}
-      {Comp Sci}{DEGREESTART1 -- DEGREEEND1}
-
-  \resumeSubHeadingListEnd 
-\section{Experience} 
- \resumeSubHeadingListStart 
-
-    \resumeSubheading
-      {swe1}{1 -- 6}
-      {fart comapny}{here, STATE1}
-      \resumeItemListStart
-        \resumeItem{111}
-		\resumeItem{222}
-		\resumeItem{this }
-        \resumeItem{work}
-      \resumeItemListEnd
-
- \resumeSubHeadingListEnd 
 \end{document}
 

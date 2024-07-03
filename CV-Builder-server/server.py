@@ -78,7 +78,7 @@ def compileText():
 
 ## Show Complete Page with selector values
 def defaultPage(selectedTemplate):
-    mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
+    mydb = mysql.connector.connect(host=msql.host(), user=msql.user(), passwd=msql.paswrd(), database=msql.databaseName())
     mycursor = mydb.cursor()
     mycursor.execute("select Templates from TemplateTable where keyid= %s ", (selectedTemplate,) )
 
@@ -93,7 +93,7 @@ def defaultPage(selectedTemplate):
 
 ## Get just the base tex from DB
 def baseTex(template):
-    mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
+    mydb = mysql.connector.connect(host=msql.host(), user=msql.user(), passwd=msql.paswrd(), database=msql.databaseName())
     mycursor = mydb.cursor()
 
     mycursor.execute(f"select BaseTex from {template}Table")
@@ -273,7 +273,7 @@ def parseBasics():
     data = json.loads(data)
 
     # Pull section from DB
-    mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
+    mydb = mysql.connector.connect(host=msql.host(), user=msql.user(), passwd=msql.paswrd(), database=msql.databaseName())
     mycursor = mydb.cursor()
     mycursor.execute(f"select Header from {template}Table")
 
@@ -311,7 +311,7 @@ def parseEducation():
     data = request.json
 
     # Pull section from DB
-    mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
+    mydb = mysql.connector.connect(host=msql.host(), user=msql.user(), passwd=msql.paswrd(), database=msql.databaseName())
     mycursor = mydb.cursor()
     mycursor.execute(f"select School from {template}Table")
 
@@ -361,7 +361,7 @@ def parseExperience():
 
 
     # Pull section from DB
-    mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
+    mydb = mysql.connector.connect(host=msql.host(), user=msql.user(), passwd=msql.paswrd(), database=msql.databaseName())
     mycursor = mydb.cursor()
     mycursor.execute(f"select Experience from {template}Table")
 
@@ -430,7 +430,7 @@ def parseProjects():
     data = request.json
 
     # Pull section from DB
-    mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
+    mydb = mysql.connector.connect(host=msql.host(), user=msql.user(), passwd=msql.paswrd(), database=msql.databaseName())
     mycursor = mydb.cursor()
     mycursor.execute(f"select Projects from {template}Table")
 
@@ -501,7 +501,7 @@ def parseSkills():
     data = request.json
 
     # Pull section from DB
-    mydb = mysql.connector.connect(host="localhost", user="root", passwd=msql.user(), database='CVBuilder')
+    mydb = mysql.connector.connect(host=msql.host(), user=msql.user(), passwd=msql.paswrd(), database=msql.databaseName())
     mycursor = mydb.cursor()
     mycursor.execute(f"select Skills from {template}Table")
 
