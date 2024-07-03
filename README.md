@@ -1,3 +1,5 @@
+*Important Note: This program is optimized for the Chrome browser*
+
 
 # Purpose:
   CV-Builder is a resume formatting tool used to easily integrate a users input on to popular resume templates.
